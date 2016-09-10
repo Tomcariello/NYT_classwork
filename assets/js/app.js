@@ -3,7 +3,7 @@
 
 // Built by LucyBot. www.lucybot.com
 
-function searchResults(searchTerm) {
+function searchResults(searchTerm, recordsToReturn) {
   var url = "https://api.nytimes.com/svc/search/v2/articlesearch.json?";
   url += searchTerm;
   // ?begin_date=YYYYMMDD
@@ -11,7 +11,10 @@ function searchResults(searchTerm) {
 
   $.ajax({url: url, method: 'GET',}).done(function(result) {
 
-    for (i =1; i < 6; i++) {
+    $('#resultDiv').html("");
+    console.log(result);
+
+    for (i =0; i < recordsToReturn; i++) {
 
       var mainDiv = $('<div>');
       mainDiv.addClass('panel panel-info')
@@ -21,7 +24,7 @@ function searchResults(searchTerm) {
         
         var header = $('<h3>');
         header.addClass('panel-title');
-        header.text("result: " + i);
+        header.text("result: " + parseInt(i + 1));
 
         secondDiv.append(header);
 
@@ -42,9 +45,8 @@ function searchResults(searchTerm) {
 
       secondDiv.append(summary);
       mainDiv.append(secondDiv);
-
+      
       $('#resultDiv').append(mainDiv);
-      console.log("Panel written: " + i);
     }
     }).fail(function(err) {
       throw err;
@@ -60,6 +62,17 @@ $('#submit').on('click', function() {
   // var submittedEndDate = $("#endDate").val();
   // var recordsRequested = $("#records").val();
   // alert("clicked " + submittedString);
-  searchResults("submittedString");
+
+  numberOfRecords = exampleSelect1.options.selectedIndex;
+  if (numberOfRecords == 0) {
+    numberOfRecords = 1 ;
+  } else if (numberOfRecords == 1) {
+    numberOfRecords = 5;
+  } else {
+    numberOfRecords = 10;
+  }
+
+  console.log(numberOfRecords);
+  searchResults(submittedString, numberOfRecords);
   return false;
 });
