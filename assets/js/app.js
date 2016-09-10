@@ -3,18 +3,30 @@
 
 // Built by LucyBot. www.lucybot.com
 
-function searchResults(searchTerm, recordsToReturn) {
+function searchResults(searchTerm, recordsToReturn, startDate) {
   var url = "https://api.nytimes.com/svc/search/v2/articlesearch.json?";
-  url += searchTerm;
+  url += "q=" + searchTerm;
   // var startingDate = "?begin_date=" + startDate;
-  // url += startingDate;
+  var dateToCheck = 18000101;
+  if (startDate != null) {
+    dateToCheck =  "?begin_date" + startDate;
+  }
+
+  url += "?begin_date=" + dateToCheck;  
   // ?begin_date=YYYYMMDD
   // ?end_date=YYYYMMDD
+  console.log(url);
 
   $.ajax({url: url, method: 'GET',}).done(function(result) {
 
     $('#resultDiv').html("");
     console.log(result);
+
+    if (result.length < recordsToReturn) {
+      recordsToReturn = result.length;
+    }
+
+
 
     for (i =0; i < recordsToReturn; i++) {
 
@@ -26,7 +38,7 @@ function searchResults(searchTerm, recordsToReturn) {
         
         var header = $('<h3>');
         header.addClass('panel-title');
-        header.text("result: " + parseInt(i + 1));
+        header.text("(result: " + parseInt(i + 1) + ") " + result.response.docs[i].headline.main);
 
         secondDiv.append(header);
 
@@ -37,8 +49,9 @@ function searchResults(searchTerm, recordsToReturn) {
       var a = $('<a>');
       var p_date = $('<p>');
 
-      p_date.text(result.response.docs[i].pub_date);
+      p_date.text("Date of publication: " + result.response.docs[i].pub_date);
       a.attr('href', result.response.docs[i].web_url);
+      a.attr('target', 'new');
       a.text(result.response.docs[i].snippet);
       p.append(a);
       p.append(p_date);
