@@ -6,6 +6,8 @@
 function searchResults(searchTerm, recordsToReturn) {
   var url = "https://api.nytimes.com/svc/search/v2/articlesearch.json?";
   url += searchTerm;
+  // var startingDate = "?begin_date=" + startDate;
+  // url += startingDate;
   // ?begin_date=YYYYMMDD
   // ?end_date=YYYYMMDD
 
@@ -58,12 +60,9 @@ function searchResults(searchTerm, recordsToReturn) {
 $('#submit').on('click', function() {
   console.log(searchTerm);
   var submittedString = $("#searchTerm").val();
-  // var submittedStartDate = $("#startDate").val();
-  // var submittedEndDate = $("#endDate").val();
-  // var recordsRequested = $("#records").val();
-  // alert("clicked " + submittedString);
 
   numberOfRecords = exampleSelect1.options.selectedIndex;
+
   if (numberOfRecords == 0) {
     numberOfRecords = 1 ;
   } else if (numberOfRecords == 1) {
@@ -72,7 +71,7 @@ $('#submit').on('click', function() {
     numberOfRecords = 10;
   }
 
-  console.log(numberOfRecords);
-  searchResults(submittedString, numberOfRecords);
+  var startDate = $('#exampleInputPassword1').val();
+  searchResults(submittedString, numberOfRecords, startDate);
   return false;
 });
