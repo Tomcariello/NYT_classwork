@@ -1,16 +1,21 @@
 //Taken from NYT website
 //https://developer.nytimes.com/article_search_v2.json#/Console/GET/articlesearch.json
-function searchResults(searchTerm, recordsToReturn, startDate) {
+function searchResults(searchTerm, recordsToReturn, startDate,userEndDate) {
   var url = "https://api.nytimes.com/svc/search/v2/articlesearch.json?";
   url += "q=" + searchTerm;
   // var startingDate = "?begin_date=" + startDate;
-  var beginningDate = "&?begin_date=18000101";
+  var beginningDate = "&begin_date=18000101";
+  var endDate = "&end_date=20161212";
+  
   if (startDate.length == 8) {
-     beginningDate =  "&?begin_date=" + startDate;
+     beginningDate =  "&begin_date=" + startDate;
+  }
+  if (userEndDate.length == 8) {
+     endDate =  "&end_date=" + userEndDate;
   }
 
   url += beginningDate;  
-  // ?end_date=YYYYMMDD
+  url += endDate; 
   url += "&api-key=56de0714f810449bba3bab87764788e9";
   console.log(url);
 
@@ -71,7 +76,7 @@ $('#submit').on('click', function() {
   console.log(searchTerm);
   var submittedString = $("#searchTerm").val();
 
-  numberOfRecords = exampleSelect1.options.selectedIndex;
+  numberOfRecords = records.options.selectedIndex;
 
   if (numberOfRecords == 0) {
     numberOfRecords = 1 ;
@@ -82,6 +87,7 @@ $('#submit').on('click', function() {
   }
 
   var startDate = $('#exampleInputPassword1').val();
-  searchResults(submittedString, numberOfRecords, startDate);
+  var endDate = $('#endYear').val();
+  searchResults(submittedString, numberOfRecords, startDate, endDate);
   return false;
 });
